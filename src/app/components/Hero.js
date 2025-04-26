@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { data } from '../data/config';
 
 const Hero = () => {
-
     const [formData, setFormData] = useState({
         model_year: 2020,
         transmission: 'automatic',
@@ -50,24 +49,35 @@ const Hero = () => {
         });
     };
 
-
-    // Currency conversion function
+    // Updated currency conversion function
     const convertCurrency = (amount, targetCurrency) => {
+        // First convert the base amount according to the currency
+        let convertedAmount;
         switch (targetCurrency) {
             case 'MAD': // Dirham
-                return amount;
+                convertedAmount = amount;
+                break;
             case 'SANTIM':
-                return amount * 100; // 1 Dirham = 100 Santim
+                convertedAmount = amount * 100; // 1 Dirham = 100 Santim
+                break;
             case 'RIYAL':
-                return amount / 5; // Approximate: 1 Riyal = 5 Dirham
+                convertedAmount = amount * 20; // 1 Dirham = 20 Riyal
+                break;
             default:
-                return amount;
+                convertedAmount = amount;
+        }
+
+        // Format with K for thousands and M for millions
+        if (convertedAmount >= 1000000) {
+            return (convertedAmount / 1000000).toFixed(1) + 'M';
+        } else if (convertedAmount >= 1000) {
+            return (convertedAmount / 1000).toFixed(1) + 'K';
+        } else {
+            return convertedAmount.toLocaleString();
         }
     };
 
-
     const currentYear = new Date().getFullYear();
-
 
     const pulseVariants = {
         pulse: {
@@ -85,21 +95,68 @@ const Hero = () => {
         }
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setFormSubmitted(true);
 
         try {
-            // This would be your API endpoint to predict the price
-            // For demo purposes, set a mock predicted price after a delay
-            setTimeout(() => {
-                setPredictedPrice(Math.floor(Math.random() * 100000) + 50000);
-                setIsLoading(false);
-            }, 1500);
+            // Calculate car age from model year
+            const carAge = currentYear - formData.model_year;
+
+            // Prepare data for API request in the required structure
+            const requestData = {
+                model_year: formData.model_year,
+                mileage: formData.mileage,
+                number_of_doors: formData.number_of_doors,
+                first_owner: formData.first_owner,
+                tax_horsepower: formData.tax_horsepower,
+                abs: formData.abs,
+                airbags: formData.airbags,
+                multimedia: formData.multimedia,
+                backup_camera: formData.backup_camera,
+                air_conditioning: formData.air_conditioning,
+                esp: formData.esp,
+                aluminum_wheels: formData.aluminum_wheels,
+                speed_limiter: formData.speed_limiter,
+                onboard_computer: formData.onboard_computer,
+                parking_sensors: formData.parking_sensors,
+                cruise_control: formData.cruise_control,
+                leather_seats: formData.leather_seats,
+                navigation_gps: formData.navigation_gps,
+                sunroof: formData.sunroof,
+                remote_central_locking: formData.remote_central_locking,
+                power_windows: formData.power_windows,
+                car_age: carAge,
+                transmission: formData.transmission,
+                fuel_type: formData.fuel_type,
+                brand: formData.brand,
+                model: formData.model,
+                origin: formData.origin,
+                condition: formData.condition
+            };
+
+            // Send request to API
+            const response = await fetch(`${process.env.NEXT_PUBLIC_MODEL_URL}/predict`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch prediction from API');
+            }
+
+            const data = await response.json();
+            console.log(data.prediction)
+            setPredictedPrice(Math.floor(data.prediction));
+            setIsLoading(false);
         } catch (error) {
             console.error('Error predicting price:', error);
+            // Fallback to a random price for development
+            setPredictedPrice(Math.floor(Math.random() * 100000) + 50000);
             setIsLoading(false);
         }
     };
@@ -205,7 +262,6 @@ const Hero = () => {
             </div>
         );
     };
-
 
     const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
 
