@@ -37,7 +37,7 @@ const Hero = () => {
 
     const [predictedPrice, setPredictedPrice] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [showResults, setShowResults] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState('MAD'); // Moroccan Dirham is default
 
     const handleChange = (e) => {
@@ -47,6 +47,7 @@ const Hero = () => {
             [name]: type === 'checkbox' ? checked :
                 type === 'number' ? parseFloat(value) : value
         });
+        // Note: No longer resetting price when form changes
     };
 
     // Updated currency conversion function
@@ -98,7 +99,7 @@ const Hero = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setFormSubmitted(true);
+        setShowResults(true);
 
         try {
             // Calculate car age from model year
@@ -162,6 +163,25 @@ const Hero = () => {
     };
 
     const ResultSection = () => {
+        if (!showResults) {
+            return (
+                <div className="text-center py-16">
+                    <motion.div
+                        animate="pulse"
+                        variants={pulseVariants}
+                        className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full mx-auto flex items-center justify-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </motion.div>
+                    <p className="text-gray-500 mt-4">
+                        Fill out the form and click &quot;Predict Price&quot; to get an estimated value for your car
+                    </p>
+                </div>
+            );
+        }
+
         if (isLoading) {
             return (
                 <div className="flex flex-col items-center justify-center py-16">
@@ -190,20 +210,10 @@ const Hero = () => {
 
         if (predictedPrice) {
             return (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                    className="text-center py-8"
-                >
-                    <motion.div
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                        className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text"
-                    >
+                <div className="text-center py-8">
+                    <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
                         {convertCurrency(predictedPrice, selectedCurrency).toLocaleString()} {selectedCurrency}
-                    </motion.div>
+                    </div>
                     <p className="text-gray-500 mt-2">Estimated market value</p>
 
                     {/* Currency selector */}
@@ -230,37 +240,17 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-8 border-t pt-6"
-                    >
+                    <div className="mt-8 border-t pt-6">
                         <p className="text-sm text-gray-600">
                             This estimation is based on similar vehicles in the Moroccan market.
                             Actual prices may vary based on additional factors.
                         </p>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             );
         }
 
-        return (
-            <div className="text-center py-16">
-                <motion.div
-                    animate="pulse"
-                    variants={pulseVariants}
-                    className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full mx-auto flex items-center justify-center"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </motion.div>
-                <p className="text-gray-500 mt-4">
-                    Fill out the form and click &quot;Predict Price&quot; to get an estimated value for your car
-                </p>
-            </div>
-        );
+        return null;
     };
 
     const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
@@ -550,20 +540,21 @@ const Hero = () => {
 
                         <ResultSection />
 
-                        <motion.div
-                            className="mt-8"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.7 }}
-                        >
-                            <div className="bg-blue-50 rounded-lg p-4">
-                                <h3 className="font-medium text-blue-800 mb-2">How it works</h3>
-                                <p className="text-sm text-blue-700">
-                                    Our AI model analyzes thousands of car listings across Morocco to provide
-                                    accurate price predictions based on your vehicle&apos;s specifications and features.
-                                </p>
-                            </div>
-                        </motion.div>
+                        {showResults && !isLoading && predictedPrice && (
+                            <motion.div
+                                className="mt-8"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                            >
+                                <div className="bg-blue-50 rounded-lg p-4">
+                                    <h3 className="font-medium text-blue-800 mb-2">How it works</h3>
+                                    <p className="text-sm text-blue-700">
+                                        Our AI model analyzes thousands of car listings across Morocco to provide
+                                        accurate price predictions based on your vehicle&apos;s specifications and features.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
                     </motion.div>
                 </div>
             </motion.div>
