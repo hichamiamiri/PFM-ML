@@ -212,7 +212,7 @@ const Hero = () => {
             return (
                 <div className="text-center py-8">
                     <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-                        {convertCurrency(predictedPrice, selectedCurrency).toLocaleString()} {selectedCurrency}
+                        {convertCurrency(predictedPrice, selectedCurrency).toLocaleString()} <span className='text-2xl'>{selectedCurrency}</span>
                     </div>
                     <p className="text-gray-500 mt-2">Estimated market value</p>
 
@@ -231,12 +231,12 @@ const Hero = () => {
                             >
                                 Santim
                             </button>
-                            <button
+                            {/* <button
                                 className={`px-4 py-2 text-sm font-medium border-l ${selectedCurrency === 'RIYAL' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                                 onClick={() => setSelectedCurrency('RIYAL')}
                             >
                                 Riyal
-                            </button>
+                            </button> */}
                         </div>
                     </div>
 
