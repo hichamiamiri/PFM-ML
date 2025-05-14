@@ -219,29 +219,23 @@ const Hero = () => {
 
                     {/* Currency selector */}
                     <div className="mt-6">
-                        <div className="inline-flex items-center border rounded-md overflow-hidden">
+                        <div className="inline-flex items-center border border-blue-500 rounded-md overflow-hidden">
                             <button
-                                className={`px-4 py-2 text-sm font-medium ${selectedCurrency === 'MAD' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                                className={`cursor-pointer px-4 py-2 text-sm font-medium ${selectedCurrency === 'MAD' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                                 onClick={() => setSelectedCurrency('MAD')}
                             >
                                 Dirham (DH)
                             </button>
                             <button
-                                className={`px-4 py-2 text-sm font-medium border-l ${selectedCurrency === 'SANTIM' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                                className={`cursor-pointer px-4 py-2 text-sm font-medium border-l border-blue-500  ${selectedCurrency === 'SANTIM' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                                 onClick={() => setSelectedCurrency('SANTIM')}
                             >
                                 Santim
                             </button>
-                            {/* <button
-                                className={`px-4 py-2 text-sm font-medium border-l ${selectedCurrency === 'RIYAL' ? 'bg-blue-100 text-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-                                onClick={() => setSelectedCurrency('RIYAL')}
-                            >
-                                Riyal
-                            </button> */}
                         </div>
                     </div>
 
-                    <div className="mt-8 border-t pt-6">
+                    <div className="mt-8 pt-6">
                         <p className="text-sm text-gray-600">
                             This estimation is based on similar vehicles in the Moroccan market.
                             Actual prices may vary based on additional factors.
@@ -287,10 +281,10 @@ const Hero = () => {
     };
 
     return (
-        <div className="grid md:grid-cols-5 gap-8 p-8">
+        <div className="grid lg:grid-cols-5 gap-8 p-8">
             {/* Form Section */}
             <motion.div
-                className="md:col-span-3 space-y-6"
+                className="lg:col-span-3 space-y-6"
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
@@ -527,7 +521,7 @@ const Hero = () => {
 
             {/* Result Section */}
             <motion.div
-                className="md:col-span-2"
+                className="lg:col-span-2"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
