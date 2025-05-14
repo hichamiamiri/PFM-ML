@@ -12,7 +12,7 @@ export const data = {
        'Tata', 'Dodge', 'Subaru', 'Bentley', 'GWM Motors', 'SERES'
     ],
     carConditions: ['excellent', 'good', 'fair', 'poor'],
-    origin: ['Morocco WW','Customs cleared','Newly imported','Not yet customs cleared'],
+    origins: ['Morocco WW','Customs cleared','Newly imported','Not yet customs cleared'],
     fuelType: ['Diesel', 'Gasoline', 'Hybrid', 'Electric','LPG'],
     models: [
         'T-Roc', 'Kuga', 'Duster', 'Range Rover Sport', 'Classe E',

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { data } from '../data/config';
+import SearchableDropdown from './SearchableDropDown.js'; // Adjust path based on your file structure
 
 const Hero = () => {
     const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const Hero = () => {
         power_windows: true
     });
 
-    const { carBrands, carConditions, fuelType, origin } = data;
+    const { carBrands, carConditions, fuelType, origins, models } = data;
 
     const [predictedPrice, setPredictedPrice] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -307,28 +308,28 @@ const Hero = () => {
                             {/* Brand and Model */}
                             <motion.div variants={itemVariants} className={formGroupClass}>
                                 <label className={labelClass} htmlFor="brand">Brand</label>
-                                <select
+                                <SearchableDropdown
                                     id="brand"
                                     name="brand"
                                     className={selectClass}
                                     value={formData.brand}
                                     onChange={handleChange}
-                                >
-                                    {carBrands.map(brand => (
-                                        <option key={brand} value={brand}>{brand}</option>
-                                    ))}
-                                </select>
+                                    options={carBrands}
+                                    placeholder="Select brand"
+                                />
                             </motion.div>
 
+                            {/* Model Dropdown */}
                             <motion.div variants={itemVariants} className={formGroupClass}>
                                 <label className={labelClass} htmlFor="model">Model</label>
-                                <input
-                                    type="text"
+                                <SearchableDropdown
                                     id="model"
                                     name="model"
-                                    className={inputClass}
+                                    className={selectClass}
                                     value={formData.model}
                                     onChange={handleChange}
+                                    options={models}
+                                    placeholder="Select model"
                                 />
                             </motion.div>
 
@@ -428,8 +429,9 @@ const Hero = () => {
                                     value={formData.origin}
                                     onChange={handleChange}
                                 >
-                                    <option value="imported">Imported</option>
-                                    <option value="local">Local</option>
+                                    {origins.map(origin => (
+                                        <option key={origin} value={origin}>{origin}</option>
+                                    ))}
                                 </select>
                             </motion.div>
 
